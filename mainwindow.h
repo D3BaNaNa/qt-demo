@@ -4,6 +4,9 @@
 #include <QObject>
 #include <QMediaPlayer>
 #include <QAudioOutput>
+#include <QJsonObject>
+#include <QJsonDocument>
+#include <QTcpSocket>
 
 class AppController : public QObject
 {
@@ -20,6 +23,8 @@ public:
 
     QString statusText() const { return m_statusText; }
     void setStatusText(const QString &text);
+
+    void server_send(const QString &content_type, const QString &content);
 
 public slots:
     void handleButtonClick(const QString &inputText);
@@ -38,6 +43,12 @@ private:
     QString m_statusText;
     QMediaPlayer *m_mediaPlayer;
     QAudioOutput *m_audioOutput;
+    QTcpSocket *m_socket;
 };
+
+void send_server(const QString &arg1, const QString &arg2)
+{
+    // Function implementation would go here
+}
 
 #endif // APPCONTROLLER_H
