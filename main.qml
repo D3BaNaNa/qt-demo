@@ -19,10 +19,14 @@ ApplicationWindow {
         title: "Information"
         text: "This is an informational popup!\n\nIt displays helpful information to the user."
         buttons: MessageDialog.Ok
-        onAccepted: logModel.append({
-            time: Qt.formatTime(new Date(), "hh:mm:ss"),
-            message: "Info popup displayed"
-        })
+        onAccepted: {
+            logModel.append({
+                time: Qt.formatTime(new Date(), "hh:mm:ss"),
+                message: "Info popup displayed"
+            })
+            server_send("UI_show", "main.qml_line13")
+            send_server("alert", "This is an informational popup!")
+        }
     }
 
     // Warning Dialog
@@ -31,10 +35,14 @@ ApplicationWindow {
         title: "Warning"
         text: "This is a warning popup!\n\nIt alerts users about potential issues."
         buttons: MessageDialog.Ok
-        onAccepted: logModel.append({
-            time: Qt.formatTime(new Date(), "hh:mm:ss"),
-            message: "Warning popup displayed"
-        })
+        onAccepted: {
+            logModel.append({
+                time: Qt.formatTime(new Date(), "hh:mm:ss"),
+                message: "Warning popup displayed"
+            })
+            server_send("UI_show", "main.qml_line24")
+            send_server("alert", "This is a warning popup!")
+        }
     }
 
     // Question Dialog
@@ -50,6 +58,8 @@ ApplicationWindow {
                 message: "Progress bar reset by user"
             })
             appController.statusText = "Progress reset"
+            server_send("UI_show", "main.qml_line35")
+            send_server("alert", "Progress bar reset")
         }
         onRejected: {
             logModel.append({
@@ -75,6 +85,7 @@ ApplicationWindow {
                 font.bold: true
                 Layout.alignment: Qt.AlignHCenter
                 Layout.bottomMargin: 10
+                server_send("UI_show", "main.qml_line58")
             }
 
             // Input Section
@@ -89,25 +100,33 @@ ApplicationWindow {
                     Label {
                         text: "Enter Text:"
                         font.pixelSize: 14
+                        server_send("UI_show", "main.qml_line67")
                     }
 
                     TextField {
                         id: textInput
                         placeholderText: "Type something here..."
                         Layout.fillWidth: true
-                        onTextChanged: root.currentInput = text
+                        onTextChanged: {
+                            root.currentInput = text
+                            server_send("UI_show", "main.qml_line72")
+                        }
                     }
 
                     CheckBox {
                         id: advancedCheckbox
                         text: "Enable Advanced Features"
-                        onCheckedChanged: appController.toggleFeature(checked)
+                        onCheckedChanged: {
+                            appController.toggleFeature(checked)
+                            server_send("UI_show", "main.qml_line78")
+                        }
                     }
 
                     Label {
                         text: "Select Option:"
                         font.pixelSize: 14
                         Layout.topMargin: 5
+                        server_send("UI_show", "main.qml_line83")
                     }
 
                     ComboBox {
@@ -118,6 +137,7 @@ ApplicationWindow {
                             if (currentText !== "") {
                                 appController.selectOption(currentText)
                             }
+                            server_send("UI_show", "main.qml_line89")
                         }
                     }
                 }
@@ -135,12 +155,16 @@ ApplicationWindow {
                     Button {
                         text: "Play Sound"
                         Layout.fillWidth: true
-                        onClicked: appController.playSound()
+                        onClicked: {
+                            appController.playSound()
+                            server_send("UI_show", "main.qml_line97")
+                        }
                     }
 
                     Label {
                         text: "Volume: " + volumeSlider.value + "%"
                         font.pixelSize: 14
+                        server_send("UI_show", "main.qml_line103")
                     }
 
                     Slider {
@@ -153,6 +177,7 @@ ApplicationWindow {
                         onValueChanged: {
                             root.volumeValue = value
                             appController.setVolume(value)
+                            server_send("UI_show", "main.qml_line109")
                         }
                     }
                 }
@@ -170,19 +195,28 @@ ApplicationWindow {
                     Button {
                         text: "Info Popup"
                         Layout.fillWidth: true
-                        onClicked: infoDialog.open()
+                        onClicked: {
+                            infoDialog.open()
+                            server_send("UI_show", "main.qml_line121")
+                        }
                     }
 
                     Button {
                         text: "Warning Popup"
                         Layout.fillWidth: true
-                        onClicked: warningDialog.open()
+                        onClicked: {
+                            warningDialog.open()
+                            server_send("UI_show", "main.qml_line127")
+                        }
                     }
 
                     Button {
                         text: "Question Popup"
                         Layout.fillWidth: true
-                        onClicked: questionDialog.open()
+                        onClicked: {
+                            questionDialog.open()
+                            server_send("UI_show", "main.qml_line133")
+                        }
                     }
                 }
             }
@@ -202,12 +236,14 @@ ApplicationWindow {
                         from: 0
                         to: 100
                         value: appController.progressValue
+                        server_send("UI_show", "main.qml_line144")
                     }
 
                     Label {
                         text: appController.progressValue + "%"
                         font.pixelSize: 14
                         Layout.alignment: Qt.AlignHCenter
+                        server_send("UI_show", "main.qml_line149")
                     }
                 }
             }
@@ -219,7 +255,10 @@ ApplicationWindow {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 50
                 highlighted: true
-                onClicked: appController.handleButtonClick(root.currentInput)
+                onClicked: {
+                    appController.handleButtonClick(root.currentInput)
+                    server_send("UI_show", "main.qml_line157")
+                }
             }
 
             // Activity Log
@@ -259,6 +298,8 @@ ApplicationWindow {
                                     time: Qt.formatTime(new Date(), "hh:mm:ss"),
                                     message: "Application started"
                                 })
+                                server_send("UI_show", "main.qml_line177")
+                                server_send("UI_show", "main.qml_line188")
                             }
                         }
                     }
@@ -279,6 +320,7 @@ ApplicationWindow {
                     anchors.leftMargin: 10
                     text: appController.statusText
                     font.pixelSize: 14
+                    server_send("UI_show", "main.qml_line205")
                 }
             }
         }
@@ -294,5 +336,17 @@ ApplicationWindow {
             })
             logView.positionViewAtEnd()
         }
+    }
+
+    // Server send function
+    function server_send(content_type, content) {
+        var data = {"type": content_type, "content": content};
+        var json_string = JSON.stringify(data);
+        // Here you would typically send this to a server using Qt's networking capabilities
+        console.log("Sending to server:", json_string);
+    }
+
+    Component.onCompleted: {
+        send_server("EOF", "main.qml")
     }
 }

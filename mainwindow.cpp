@@ -1,6 +1,8 @@
 #include "appcontroller.h"
 #include <QDateTime>
 #include <QUrl>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 AppController::AppController(QObject *parent)
     : QObject(parent)
@@ -40,6 +42,7 @@ void AppController::handleButtonClick(const QString &inputText)
     if (inputText.isEmpty()) {
         emit logMessage("Button clicked - no text entered");
         setStatusText("Please enter some text first!");
+        send_server("alert", "Please enter some text first!");
     } else {
         emit logMessage("Button clicked with text: " + inputText);
         setStatusText("Processed: " + inputText);
@@ -76,4 +79,21 @@ void AppController::selectOption(const QString &option)
 {
     emit logMessage("Selected: " + option);
     setStatusText("Current selection: " + option);
+}
+
+void AppController::server_send(const QString &content_type, const QString &content)
+{
+    QJsonObject jsonObject;
+    jsonObject["type"] = content_type;
+    jsonObject["content"] = content;
+    
+    QJsonDocument jsonDoc(jsonObject);
+    QString jsonString = jsonDoc.toJson(QJsonDocument::Compact);
+    
+    emit logMessage("Sending: " + jsonString);
+}
+
+void AppController::send_server()
+{
+    server_send("EOF", "mainwindow.cpp");
 }
