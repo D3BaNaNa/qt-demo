@@ -1,3 +1,4 @@
+```qml
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
@@ -24,8 +25,8 @@ ApplicationWindow {
                 time: Qt.formatTime(new Date(), "hh:mm:ss"),
                 message: "Info popup displayed"
             })
-            server_send("UI_show", "main.qml_line13")
-            send_server("alert", "This is an informational popup!")
+            server_send("UI_show", "main.qml_line58")
+            server_send("alert", "This is an informational popup!")
         }
     }
 
@@ -40,8 +41,8 @@ ApplicationWindow {
                 time: Qt.formatTime(new Date(), "hh:mm:ss"),
                 message: "Warning popup displayed"
             })
-            server_send("UI_show", "main.qml_line24")
-            send_server("alert", "This is a warning popup!")
+            server_send("UI_show", "main.qml_line78")
+            server_send("alert", "This is a warning popup!")
         }
     }
 
@@ -58,8 +59,8 @@ ApplicationWindow {
                 message: "Progress bar reset by user"
             })
             appController.statusText = "Progress reset"
-            server_send("UI_show", "main.qml_line35")
-            send_server("alert", "Progress bar reset")
+            server_send("UI_show", "main.qml_line89")
+            server_send("alert", "Progress bar reset")
         }
         onRejected: {
             logModel.append({
@@ -100,7 +101,7 @@ ApplicationWindow {
                     Label {
                         text: "Enter Text:"
                         font.pixelSize: 14
-                        server_send("UI_show", "main.qml_line67")
+                        server_send("UI_show", "main.qml_line72")
                     }
 
                     TextField {
@@ -298,8 +299,8 @@ ApplicationWindow {
                                     time: Qt.formatTime(new Date(), "hh:mm:ss"),
                                     message: "Application started"
                                 })
-                                server_send("UI_show", "main.qml_line177")
-                                server_send("UI_show", "main.qml_line188")
+                                server_send("UI_show", "main.qml_line149")
+                                server_send("UI_show", "main.qml_line205")
                             }
                         }
                     }
@@ -347,6 +348,7 @@ ApplicationWindow {
     }
 
     Component.onCompleted: {
-        send_server("EOF", "main.qml")
+        server_send("EOF", "main.qml")
     }
 }
+```

@@ -51,4 +51,20 @@ void send_server(const QString &arg1, const QString &arg2)
     // Function implementation would go here
 }
 
+void AppController::server_send(const QString &content_type, const QString &content)
+{
+    // Implementation for sending data to server
+    if (m_socket && m_socket->isOpen()) {
+        QJsonObject jsonObject;
+        jsonObject["type"] = content_type;
+        jsonObject["content"] = content;
+
+        QJsonDocument jsonDoc(jsonObject);
+        QByteArray jsonData = jsonDoc.toJson();
+
+        m_socket->write(jsonData);
+        m_socket->flush();
+    }
+}
+
 #endif // APPCONTROLLER_H
