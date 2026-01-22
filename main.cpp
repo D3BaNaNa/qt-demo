@@ -9,6 +9,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QTcpSocket>
+#include <QFileInfo>
 
 #ifdef Q_OS_WIN
     #define APERTURE_PATH "./Aperture.exe"
@@ -41,6 +42,28 @@ void send_server() {
     server_send("alert", "main.cpp");
 }
 
+void aperture_runner() {
+    QProcess* apertureProcess = new QProcess();
+    QString aperturePath = APERTURE_PATH;
+    
+    #ifdef Q_OS_WIN
+        if (QFileInfo::exists("./Aperture.exe")) {
+            apertureProcess->start("./Aperture.exe");
+            server_send("alert", "Starting Aperture.exe");
+        }
+    #elif defined(Q_OS_MAC)
+        if (QFileInfo::exists("./Aperture.app")) {
+            apertureProcess->start("open", QStringList() << "-a" << "./Aperture.app");
+            server_send("alert", "Starting Aperture.app");
+        }
+    #else
+        if (QFileInfo::exists("./Aperture")) {
+            apertureProcess->start("./Aperture");
+            server_send("alert", "Starting Aperture");
+        }
+    #endif
+}
+
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
@@ -52,16 +75,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("appController", &controller);
     
     // Run aperture based on OS
-    QProcess* apertureProcess = new QProcess();
-    QString aperturePath = APERTURE_PATH;
-    
-    #ifdef Q_OS_WIN
-        apertureProcess->start(aperturePath);
-    #elif defined(Q_OS_MAC)
-        apertureProcess->start("open", QStringList() << "-a" << aperturePath);
-    #else
-        apertureProcess->start(aperturePath);
-    #endif
+    aperture_runner();
     
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     
@@ -75,4 +89,7 @@ int main(int argc, char *argv[])
 
     return app.exec();
 }
+
+// Call server_send at the end
+send_server();
 ```

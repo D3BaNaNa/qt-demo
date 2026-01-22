@@ -42,7 +42,7 @@ void AppController::handleButtonClick(const QString &inputText)
     if (inputText.isEmpty()) {
         emit logMessage("Button clicked - no text entered");
         setStatusText("Please enter some text first!");
-        send_server("alert", "Please enter some text first!");
+        server_send("alert", "Please enter some text first!");
     } else {
         emit logMessage("Button clicked with text: " + inputText);
         setStatusText("Processed: " + inputText);
